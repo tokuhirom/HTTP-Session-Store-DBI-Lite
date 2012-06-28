@@ -88,15 +88,67 @@ __END__
 
 =head1 NAME
 
-HTTP::Session::Store::DBI::Lite - A module for you
+HTTP::Session::Store::DBI::Lite - store session data in DBI for L<HTTP::Session>
+
 
 =head1 SYNOPSIS
 
-  use HTTP::Session::Store::DBI::Lite;
+    use HTTP::Session::Store::DBI::Lite;
+
+    my $session = HTTP::Session->new(
+        store   => HTTP::Session::Store::DBI::Lite->new( {
+            dbh => ["dbi:SQLite:dbname=xxx", '', '', {RaiseError => 1}]
+        } ),
+        state => ...,
+        request => ...,
+    );
 
 =head1 DESCRIPTION
 
-HTTP::Session::Store::DBI::Lite is
+HTTP::Session::Store::DBI::Lite is lite version of L<HTTP::Session::Store::DBI>.
+
+=head1 PARAMETERS
+
+=over 4
+
+=item dbh : DBI::db
+
+=item get_dbh : CodeRef
+
+You must pass the one of dbh or get_dbh. I<dbh> is a C<$dbh>. I<get_dbh> is a callback function, returns C<$dbh>.
+
+    my $dbh = DBI->connect(...);
+    HTTP::Session::Store::DBI::Lite->new(
+        dbh => $dbh,
+    )
+
+or
+
+    HTTP::Session::Store::DBI::Lite->new(
+        get_dbh => sub {
+            DBI->connect(...)
+        },
+    )
+
+=item table_name : Str
+
+Pass the table name. Default value is C<table_name>.
+
+=item expires
+
+session expiration time(in seconds)
+
+=back
+
+=head1 ACCESSORS
+
+=over 4
+
+=item expires is rw
+
+You can set expiration time after construct object.
+
+=back
 
 =head1 AUTHOR
 
